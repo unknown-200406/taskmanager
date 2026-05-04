@@ -10,12 +10,12 @@ app = Flask(__name__)
 # ── Config ────────────────────────────────────────────
 app.secret_key = 'your_secret_key_here_change_in_production'
 
-# ✅ MySQL Connection — change these values to match your MySQL Workbench setup
-MYSQL_USER     = 'root'           # your MySQL username
-MYSQL_PASSWORD = '1234'  # your MySQL password
-MYSQL_HOST     = 'localhost'      # or 127.0.0.1
-MYSQL_PORT     = '3306'           # default MySQL port
-MYSQL_DB       = 'taskflow_db'    # database name (create this in Workbench first)
+import os
+MYSQL_USER     = os.environ.get('MYSQL_USER', 'root')
+MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', '1234')
+MYSQL_HOST     = os.environ.get('MYSQL_HOST', 'localhost')
+MYSQL_PORT     = os.environ.get('MYSQL_PORT', '3306')
+MYSQL_DB       = os.environ.get('MYSQL_DB', 'taskflow_db')  # database name (create this in Workbench first)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DB}'
