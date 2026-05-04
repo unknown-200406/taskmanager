@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block title %}{{ project['title'] }} – Tasks{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item"><a href="{{ url_for('projects.projects') }}">Projects</a></li>
+        <li class="breadcrumb-item active">{{ project.title }}</li>
+      </ol>
+    </nav>
+    <h3 class="fw-bold mb-0">{{ project.title }}</h3>
+    <p class="text-muted mb-0">{{ project.description or 'No description.' }}</p>
+  </div>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+    <i class="bi bi-plus-lg me-1"></i>Add Task
+  </button>
+</div>
+
+<!-- Filters -->
+<div class="card border-0 bg-light mb-4 mt-3">
+  <div class="card-body py-2">
+    <form method="GET" class="row g-2 align-items-center">
+      <div class="col-auto">
+        <label class="col-form-label fw-semibold">Filter:</label>
+      </div>
+      <div class="col-auto">
+        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="">All Status</option>
+          <option value="To-Do" {% if status_filter == 'To-Do' %}selected{% endif %}>To-Do</option>
+          <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+          <option value="Done" {% if status_filter == 'Done' %}selected{% endif %}>Done</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <select name="priority" class="form-select form-select-sm" onchange="this.form.submit()">
+          <option value="">All Priority</option>
+          <option value="High" {% if priority_filter == 'High' %}selected{% endif %}>High</option>
+          <option value="Medium" {% if priority_filter == 'Medium' %}selected{% endif %}>Medium</option>
+          <option value="Low" {% if priority_filter == 'Low' %}selected{% endif %}>Low</option>
+        </select>
+      </div>
+      {% if status_filter or priority_filter %}
+      <div class="col-auto">
+        <a href="{{ url_for('tasks.tasks', project_id=project['id']) }}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-x-circle me-1"></i>Clear
+        </a>
+      </div>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- Tasks List -->
+{% if tasks %}
+<div class="row g-3">
+  {% for task in tasks %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card task-card h-100 border-0 shadow-sm
+      {% if task.status == 'Done' %}task-done{% endif %}">
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+          {% if task.priority == 'High' %}
+            <span class="badge bg-danger">🔴 High</span>
+          {% elif task.priority == 'Medium' %}
+            <span class="badge bg-warning text-dark">🟡 Medium</span>
+          {% else %}
+            <span class="badge bg-success">🟢 Low</span>
+          {% endif %}
+
+          {% if task.status == 'Done' %}
+            <span class="badge bg-success"><i class="bi bi-check2-circle me-1"></i>Done</span>
+          {% elif task.status == 'In Progress' %}
+            <span class="badge bg-info text-dark"><i class="bi bi-arrow-repeat me-1"></i>In Progress</span>
+          {% else %}
+            <span class="badge bg-secondary"><i class="bi bi-clock me-1"></i>To-Do</span>
+          {% endif %}
+        </div>
+
+        <h6 class="fw-bold mb-1">{{ task.title }}</h6>
+        <p class="text-muted small mb-2">{{ task.description or '—' }}</p>
+
+        {% if task.due_date %}
+        <p class="small text-muted mb-3">
+          <i class="bi bi-calendar-event me-1"></i>Due: <strong>{{ task.due_date }}</strong>
+        </p>
+        {% endif %}
+
+        <!-- Update Status -->
+        <form method="POST" action="{{ url_for('tasks.update_status', task_id=task.id) }}" class="mb-2">
+          <input type="hidden" name="project_id" value="{{ project.id }}"/>
+          <div class="input-group input-group-sm">
+            <select name="status" class="form-select form-select-sm">
+              <option value="To-Do" {% if task.status == 'To-Do' %}selected{% endif %}>To-Do</option>
+              <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+              <option value="Done" {% if task.status == 'Done' %}selected{% endif %}>Done</option>
+            </select>
+            <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+          </div>
+        </form>
+
+        <!-- Delete -->
+        <form method="POST" action="{{ url_for('tasks.delete_task', task_id=task.id) }}"
+              onsubmit="return confirm('Delete this task?')">
+          <input type="hidden" name="project_id" value="{{ project.id }}"/>
+          <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+            <i class="bi bi-trash me-1"></i>Delete Task
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="text-center py-5">
+  <i class="bi bi-clipboard-x fs-1 text-muted d-block mb-3"></i>
+  <h5 class="text-muted">No tasks found</h5>
+  <p class="text-muted">Click "Add Task" to create your first task!</p>
+</div>
+{% endif %}
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-2"></i>Add New Task</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="POST" action="{{ url_for('tasks.add_task', project_id=project.id) }}">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Task Title <span class="text-danger">*</span></label>
+            <input type="text" name="title" class="form-control" placeholder="e.g., Design homepage" required/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea name="description" class="form-control" rows="2"
+              placeholder="What needs to be done?"></textarea>
+          </div>
+          <div class="row g-2">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Priority</label>
+              <select name="priority" class="form-select">
+                <option value="Low">🟢 Low</option>
+                <option value="Medium" selected>🟡 Medium</option>
+                <option value="High">🔴 High</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Due Date</label>
+              <input type="date" name="due_date" class="form-control"/>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>Add Task
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

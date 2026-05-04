@@ -1,0 +1,169 @@
+/* ── Fonts & Base ── */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f4f6fb;
+  color: #1a1a2e;
+}
+
+h1, h2, h3, h4, h5, .navbar-brand {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Navbar ── */
+.navbar {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+}
+
+.navbar-brand {
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+  color: #fff !important;
+}
+
+.navbar .nav-link {
+  color: rgba(255,255,255,0.8) !important;
+  transition: color 0.2s;
+}
+
+.navbar .nav-link:hover {
+  color: #fff !important;
+}
+
+/* ── Auth Pages ── */
+.auth-wrapper {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 16px;
+  border: none;
+}
+
+.auth-logo {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #4361ee, #7209b7);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  box-shadow: 0 8px 24px rgba(67, 97, 238, 0.35);
+}
+
+/* ── Stat Cards ── */
+.stat-card {
+  border-radius: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Project Cards ── */
+.project-card {
+  border-radius: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-left: 4px solid #4361ee !important;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+
+/* ── Task Cards ── */
+.task-card {
+  border-radius: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+}
+
+.task-done {
+  opacity: 0.7;
+  background-color: #f8fff8 !important;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background: linear-gradient(135deg, #4361ee, #7209b7);
+  border: none;
+  border-radius: 8px;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ── Forms ── */
+.form-control, .form-select {
+  border-radius: 8px;
+  border-color: #dee2e6;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #4361ee;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+}
+
+/* ── Modal ── */
+.modal-content {
+  border-radius: 16px;
+  border: none;
+}
+
+.modal-header {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* ── Table ── */
+.table th {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+}
+
+/* ── Alerts ── */
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+/* ── Misc ── */
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.breadcrumb-item a {
+  color: #4361ee;
+  text-decoration: none;
+}
